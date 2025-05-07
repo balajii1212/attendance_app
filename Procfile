@@ -1,1 +1,1 @@
-web: python backend/app.py
+web: waitress-serve --port=5000 backend.app:app
