@@ -1,4 +1,3 @@
-
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_session import Session
@@ -292,4 +291,5 @@ def get_attendance():
 
 
 if __name__ == "__main__":
-    app.run()
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5000)
