@@ -1,3 +1,5 @@
+git init
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_session import Session
 import bcrypt
@@ -12,7 +14,8 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 # MongoDB setup
-client = MongoClient('mongodb://localhost:27017')
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017')  # Use environment variable or fallback to localhost
+client = MongoClient(MONGO_URI)
 db = client['attendance_db']
 users = db['users']
 settings = db['settings']
