@@ -15,6 +15,7 @@ Session(app)
 # MongoDB setup
 try:
     MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017')
+    print("MongoDB URI:", os.getenv('MONGO_URI'))
     client = MongoClient(MONGO_URI)
     db = client['attendance_db']
     users = db['users']
