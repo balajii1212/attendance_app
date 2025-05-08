@@ -13,12 +13,19 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 # MongoDB setup
-MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017')  # Use environment variable or fallback to localhost
-client = MongoClient(MONGO_URI)
-db = client['attendance_db']
-users = db['users']
-settings = db['settings']
-attendance_records = db['attendance_records']
+try:
+    MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017')
+    client = MongoClient(MONGO_URI)
+    db = client['attendance_db']
+    users = db['users']
+    settings = db['settings']
+    attendance_records = db['attendance_records']
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
+    db = None
+    users = None
+    settings = None
+    attendance_records = None
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -289,9 +296,14 @@ def get_attendance():
     print("Attendance Data:", records)  # Debugging
     return jsonify(records)
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "ok"}), 200
 
 if __name__ == "__main__":
     from waitress import serve
     import os
     port = int(os.environ.get("PORT", 5000))  # Use the PORT environment variable or default to 5000
+    print(f"Starting server on port {port}")
+    print(f"MongoDB URI: {os.getenv('MONGO_URI', 'mongodb://localhost:27017')}")
     serve(app, host="0.0.0.0", port=port)
