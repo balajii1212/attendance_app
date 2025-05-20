@@ -7,6 +7,9 @@ from datetime import datetime
 from pymongo import MongoClient
 from bson import ObjectId 
 
+
+
+
 app = Flask(__name__, template_folder="templates")
 app.secret_key = 'secure_key'
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -38,6 +41,8 @@ def login():
 
         user = users.find_one({'username': username})
         if user and bcrypt.checkpw(password, user['password']):
+            print("Submitted device_id:", device_id)
+            print("Stored device_id:", user.get('device_id'))
             if not user.get('device_id'):
                 users.update_one({'username': username}, {'$set': {'device_id': device_id}})
             elif user['device_id'] != device_id:
